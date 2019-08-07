@@ -7,13 +7,10 @@ struct Node<T> {
     right: Option<Box<Node<T>>>,
 }
 
-fn mirror_tree<T>(mut root: Node<T>) -> Node<T> {
-    let mut _nodes = Vec::<&mut Node<T>>::new();
+fn mirror_tree<T>(root: &mut Node<T>) {
+    let mut _nodes = vec![root];
     
-    _nodes.push(&mut root);
-
     while let Some(node) = _nodes.pop() {
-
         mem::swap(&mut node.left, &mut node.right);
 
         match node.left {
@@ -26,8 +23,6 @@ fn mirror_tree<T>(mut root: Node<T>) -> Node<T> {
             _ => ()
         }
     }
-
-    return root;
 }
 
 //    10
@@ -35,7 +30,7 @@ fn mirror_tree<T>(mut root: Node<T>) -> Node<T> {
 // <>    11
 #[test]
 fn mirror_two_deep_tree() {
-    let root = Node::<usize> {
+    let mut root = Node::<usize> {
         value: 10,
         left: Option::None,
         right: Option::Some(
@@ -49,9 +44,9 @@ fn mirror_two_deep_tree() {
         )
     };
 
-    let mirrored = mirror_tree::<usize>(root);
+    mirror_tree::<usize>(&mut root);
 
-    assert!(mirrored == 
+    assert!(root == 
         Node::<usize> {
             value: 10,
             right: Option::None,
@@ -70,7 +65,7 @@ fn mirror_two_deep_tree() {
 
 #[test]
 fn mirror_three_deep_tree() {
-    let root = Node::<usize> {
+    let mut root = Node::<usize> {
         value: 1,
         right: Option::Some(
             Box::new(
@@ -108,9 +103,9 @@ fn mirror_three_deep_tree() {
         )
     };
 
-    let mirrored = mirror_tree::<usize>(root);
+    mirror_tree::<usize>(&mut root);
 
-    assert!(mirrored == 
+    assert!(root == 
         Node::<usize> {
             value: 1,
             right: Option::Some(
